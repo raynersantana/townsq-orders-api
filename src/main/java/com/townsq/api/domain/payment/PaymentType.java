@@ -1,4 +1,4 @@
-package com.townsq.api.domain.order;
+package com.townsq.api.domain.payment;
 
 public enum PaymentType {
 

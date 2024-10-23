@@ -4,12 +4,11 @@ import com.townsq.api.config.security.TokenService;
 import com.townsq.api.domain.cart.CartItemDTO;
 import com.townsq.api.domain.cart.CartItems;
 import com.townsq.api.domain.order.*;
+import com.townsq.api.domain.payment.Payment;
+import com.townsq.api.domain.payment.PaymentStatus;
 import com.townsq.api.domain.product.Product;
 import com.townsq.api.domain.user.User;
-import com.townsq.api.repositories.CartItemsRepository;
-import com.townsq.api.repositories.OrderRepository;
-import com.townsq.api.repositories.ProductRepository;
-import com.townsq.api.repositories.UserRepository;
+import com.townsq.api.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,14 +37,19 @@ public class OrderService {
     @Autowired
     TokenService tokenService;
 
+    @Autowired
+    PaymentRepository paymentRepository;
+
     public ResponseEntity addOrder(OrderDTO data) {
         Optional<User> optionalUser = userRepository.findById(data.userId());
         if(optionalUser.isPresent()) {
             Order order = new Order();
             order.setUser(optionalUser.get());
             order.setOrderStatus(OrderStatus.SUBMITTED);
-            order.setPaymentType(data.paymentType());
             var orderSaved = orderRepository.save(order);
+
+            Payment payment = new Payment(orderSaved, optionalUser.get(), data.paymentType(), PaymentStatus.PENDING);
+            paymentRepository.save(payment);
 
             List<CartItemDTO> cartItems = data.cartItems();
             for(CartItemDTO item : cartItems) {
@@ -76,7 +80,7 @@ public class OrderService {
         var username = tokenService.validateToken(token);
         if(username != null) {
             List<OrderDetailsDTO> orders = orderRepository.findByUsername(username).stream()
-                    .map(order -> new OrderDetailsDTO(order.getId(), order.getPaymentType(), order.getCartItems(), order.getTotalPrice())).toList();
+                    .map(order -> new OrderDetailsDTO(order.getId(), order.getCartItems(), order.getTotalPrice())).toList();
             if(!orders.isEmpty()) {
                 return ResponseEntity.ok().body(orders);
             }
@@ -88,7 +92,7 @@ public class OrderService {
         Optional<Order> optionalOrder = orderRepository.findById(id);
         if(optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
-            return ResponseEntity.ok().body(new OrderDetailsDTO(order.getId(), order.getPaymentType(), order.getCartItems(), order.getTotalPrice()));
+            return ResponseEntity.ok().body(new OrderDetailsDTO(order.getId(), order.getCartItems(), order.getTotalPrice()));
         }
         return null;
     }

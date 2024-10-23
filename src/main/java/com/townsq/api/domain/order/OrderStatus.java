@@ -3,7 +3,8 @@ package com.townsq.api.domain.order;
 public enum OrderStatus {
 
     PENDING("pending"),
-    SUBMITTED("submitted");
+    SUBMITTED("submitted"),
+    DONE("done");
 
     OrderStatus(String status) {
         this.status = status;

@@ -3,6 +3,7 @@ package com.townsq.api.domain.order;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.townsq.api.domain.cart.CartItems;
+import com.townsq.api.domain.payment.Payment;
 import com.townsq.api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +19,6 @@ public class Order {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long totalPrice;
-    private String paymentType;
     private OrderStatus orderStatus;
 
     @ManyToOne(cascade = CascadeType.MERGE)
@@ -29,6 +29,17 @@ public class Order {
     @JsonManagedReference
     private List<CartItems> cartItems;
 
-    public Order(Long id, Long totalPrice, OrderStatus orderStatus, String paymentType) {
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "order")
+    @JsonManagedReference
+    private Payment payment;
+
+    public Order(Long id, Long totalPrice, OrderStatus orderStatus, Payment payment) {
+    }
+
+    public Order(Long id, Long totalPrice, OrderStatus orderStatus, User user) {
+        this.id = id;
+        this.totalPrice = totalPrice;
+        this.orderStatus = orderStatus;
+        this.user = user;
     }
 }

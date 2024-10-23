@@ -19,7 +19,7 @@ public class OrderController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<?> createNewOrder(@RequestBody OrderDTO data) {
+    public ResponseEntity<?> createNewOrder(@RequestBody @Valid OrderDTO data) {
         return orderService.addOrder(data);
     }
 
