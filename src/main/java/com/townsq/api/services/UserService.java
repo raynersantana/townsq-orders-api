@@ -4,6 +4,7 @@ import com.townsq.api.config.security.TokenService;
 import com.townsq.api.domain.user.*;
 import com.townsq.api.repositories.UserRepository;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,8 @@ public class UserService {
     TokenService tokenService;
 
     public ResponseEntity createUser(RegisterDTO data) {
-        if(userRepository.findByUsername(data.username()) != null) return ResponseEntity.badRequest().build();
+        if(userRepository.findByUsername(data.username()) != null)
+            return ResponseEntity.badRequest().body(new UserEditDTOResponse("Username already taken!"));
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User newUser = new User(data.username(), encryptedPassword, data.role());
@@ -56,8 +58,9 @@ public class UserService {
             userRepository.save(newUser);
             UserEditDTOResponse userEditDTOResponse = new UserEditDTOResponse("User edited with success!");
             return ResponseEntity.ok().body(userEditDTOResponse);
+        }else {
+            UserEditDTOResponse userEditDTOResponse = new UserEditDTOResponse("User not found!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userEditDTOResponse);
         }
-
-        return null;
     }
 }

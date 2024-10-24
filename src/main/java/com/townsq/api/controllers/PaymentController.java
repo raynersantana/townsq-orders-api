@@ -19,7 +19,7 @@ public class PaymentController {
     PaymentService paymentService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentDetailsDTO> getOnePayment(@PathVariable Long id) {
+    public ResponseEntity<?> getOnePayment(@PathVariable Long id) {
         return paymentService.getOnePayment(id);
     }
 

@@ -22,7 +22,7 @@ public class ProductController {
     @PostMapping()
     @Transactional
     public ResponseEntity newProduct(@Valid @RequestBody ProductDTO data) {
-        if(productRepository.findByName(data.name()).isPresent()) return ResponseEntity.badRequest().build();
+        if(productRepository.findByName(data.name()).isPresent()) return ResponseEntity.badRequest().body("This product is already registered");
         Product product = new Product(data.name(), data.description(), data.price());
         productRepository.save(product);
 

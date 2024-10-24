@@ -9,8 +9,11 @@ import com.townsq.api.domain.payment.PaymentStatus;
 import com.townsq.api.domain.product.Product;
 import com.townsq.api.domain.user.User;
 import com.townsq.api.repositories.*;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -82,7 +85,11 @@ public class OrderService {
             List<OrderDetailsDTO> orders = orderRepository.findByUsername(username).stream()
                     .map(order -> new OrderDetailsDTO(order.getId(), order.getCartItems(), order.getTotalPrice())).toList();
             if(!orders.isEmpty()) {
+                System.out.println("entrou aqui, tem orders");
                 return ResponseEntity.ok().body(orders);
+            }else {
+                OrderNotFound orderNotFound = new OrderNotFound("Order not found for the given user");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(orderNotFound);
             }
         }
         return null;

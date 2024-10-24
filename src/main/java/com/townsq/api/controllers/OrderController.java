@@ -2,6 +2,7 @@ package com.townsq.api.controllers;
 
 import com.townsq.api.domain.order.Order;
 import com.townsq.api.domain.order.OrderDTO;
+import com.townsq.api.domain.order.OrderDetailsDTO;
 import com.townsq.api.repositories.OrderRepository;
 import com.townsq.api.services.OrderService;
 import jakarta.validation.Valid;
@@ -24,7 +25,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllOrders(@RequestHeader (name = "Authorization") String token) {
+    public ResponseEntity getAllOrders(@RequestHeader (name = "Authorization") String token) {
         return orderService.getAllOrders(token.replace("Bearer ", ""));
     }
 

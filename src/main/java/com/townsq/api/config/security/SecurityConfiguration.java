@@ -1,5 +1,7 @@
 package com.townsq.api.config.security;
 
+import com.townsq.api.config.exception.CustomAccessDeniedHandler;
+import com.townsq.api.config.exception.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +20,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    public SecurityConfiguration(CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                                 CustomAccessDeniedHandler customAccessDeniedHandler) {
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+    }
+
     @Autowired
     SecurityFilter securityFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
+                .exceptionHandling(exceptionHandling -> {
+                            exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint);
+                            exceptionHandling.accessDeniedHandler(customAccessDeniedHandler);
+                        }
+                )
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth

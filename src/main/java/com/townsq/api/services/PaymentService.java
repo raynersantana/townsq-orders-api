@@ -9,6 +9,7 @@ import com.townsq.api.repositories.OrderRepository;
 import com.townsq.api.repositories.PaymentRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class PaymentService {
     @Autowired
     OrderRepository orderRepository;
 
-    public ResponseEntity<PaymentDetailsDTO> getOnePayment(Long id) {
+    public ResponseEntity<?> getOnePayment(Long id) {
 
         Optional<Payment> optionalPayment = paymentRepository.findById(id);
         if(optionalPayment.isPresent()) {
@@ -38,7 +39,9 @@ public class PaymentService {
             return ResponseEntity.ok().body(paymentDetailsDTO);
         }
 
-        return null;
+        PaymentEditDTO paymentEditDTO = new PaymentEditDTO("Payment not found!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(paymentEditDTO);
+
     }
 
     public ResponseEntity<OrderDetailsPaymentDTO> processPayment(PaymentProcessDTO data) {

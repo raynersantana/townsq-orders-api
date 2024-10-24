@@ -33,9 +33,6 @@ public class Order {
     @JsonManagedReference
     private Payment payment;
 
-    public Order(Long id, Long totalPrice, OrderStatus orderStatus, Payment payment) {
-    }
-
     public Order(Long id, Long totalPrice, OrderStatus orderStatus, User user) {
         this.id = id;
         this.totalPrice = totalPrice;
