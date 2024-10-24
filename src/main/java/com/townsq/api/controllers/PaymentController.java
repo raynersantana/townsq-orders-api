@@ -5,6 +5,7 @@ import com.townsq.api.domain.order.OrderDetailsPaymentDTO;
 import com.townsq.api.domain.payment.PaymentDetailsDTO;
 import com.townsq.api.domain.payment.PaymentProcessDTO;
 import com.townsq.api.services.PaymentService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("payments")
+@SecurityRequirement(name = "bearer-key")
 public class PaymentController {
 
     @Autowired

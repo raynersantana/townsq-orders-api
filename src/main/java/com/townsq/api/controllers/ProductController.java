@@ -3,6 +3,7 @@ package com.townsq.api.controllers;
 import com.townsq.api.domain.product.Product;
 import com.townsq.api.domain.product.ProductDTO;
 import com.townsq.api.repositories.ProductRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@SecurityRequirement(name = "bearer-key")
 public class ProductController {
 
     @Autowired

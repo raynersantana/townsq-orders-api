@@ -11,6 +11,8 @@ import com.townsq.api.repositories.OrderRepository;
 import com.townsq.api.repositories.ProductRepository;
 import com.townsq.api.repositories.UserRepository;
 import com.townsq.api.services.CartItemService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@SecurityRequirement(name = "bearer-key")
 public class CartItemsController {
 
     @Autowired

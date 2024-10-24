@@ -10,6 +10,7 @@ import com.townsq.api.domain.user.User;
 import com.townsq.api.repositories.OrderRepository;
 import com.townsq.api.repositories.UserRepository;
 import com.townsq.api.services.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
+    @SecurityRequirement(name = "bearer-key")
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
         return userService.createUser(data);
