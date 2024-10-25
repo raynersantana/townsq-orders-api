@@ -6,4 +6,6 @@ To run the app, follow these steps:
     3 - Run the app  
     4 - Access http://localhost:8080/swagger-ui/index.html to navigate through the apis  
 
+If necessary, you can connect to the mysql to confirm data from the tables: docker exec -it townsq-mysql mysql -u root -p
+
 Done.
